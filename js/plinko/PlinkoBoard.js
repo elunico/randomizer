@@ -34,42 +34,42 @@ function PlinkoBoard(position, size_width, size_height) {
     }
     this.update = function () {
         // if ball has been dropped
-            if (isDiscDropping && !foundWinner) {
-                for (var i = 0; i < this.discs.length; i++) {
-                    this.discs[i].update();
-                }
-            }
-            else if (!foundWinner) {
-                if (this.discs.length > 0) 
-                    this.discs[0].hoverUpdate();
-            }
-        }
-        //Show the board pegs and disc
-    this.show = function () {
-            fill(200);
-            // Show PlinkoBoard background
-            rect(this.position.x, this.position.y, this.size_width, this.size_height);
-        // Show the disc(s)
+        if (isDiscDropping && !foundWinner) {
             for (var i = 0; i < this.discs.length; i++) {
-                this.discs[i].show();
-            }
-        // Show Pegs
-            for (var j = 0; j < this.pegs.length; j++) {
-                this.pegs[j].show();
-            }
-        // Show the labels of the containers at the end, the names
-            for (var name_index = 0; name_index < this.names.length; name_index++) {
-                var temp_x = this.position.x + ((name_index) * (this.names_width)) + (this.names_width / 2); // add half a width for centering  
-                var temp_y = this.position.y + this.size_height - (this.size_height / this.row_count);
-                var text1 = this.names[name_index];
-                // if option hideNames option is set replace the name labels with ???'s so you cant aim
-                if (hideNames && !isDiscDropping) {
-                    text1 = "????";
-                }
-                text(text1, temp_x - (text1.length * (15 / 4)), temp_y); // center text with char length
+                this.discs[i].update();
             }
         }
-        // Shuffles the array of remaining names for selection (Algorithm src: https://bost.ocks.org/mike/shuffle/)
+        else if (!foundWinner) {
+            if (this.discs.length > 0)
+                this.discs[0].hoverUpdate();
+        }
+    }
+    //Show the board pegs and disc
+    this.show = function () {
+        fill(200);
+        // Show PlinkoBoard background
+        rect(this.position.x, this.position.y, this.size_width, this.size_height);
+        // Show the disc(s)
+        for (var i = 0; i < this.discs.length; i++) {
+            this.discs[i].show();
+        }
+        // Show Pegs
+        for (var j = 0; j < this.pegs.length; j++) {
+            this.pegs[j].show();
+        }
+        // Show the labels of the containers at the end, the names
+        for (var name_index = 0; name_index < this.names.length; name_index++) {
+            var temp_x = this.position.x + ((name_index) * (this.names_width)) + (this.names_width / 2); // add half a width for centering  
+            var temp_y = this.position.y + this.size_height - (this.size_height / this.row_count);
+            var text1 = this.names[name_index];
+            // if option hideNames option is set replace the name labels with ???'s so you cant aim
+            if (hideNames && !isDiscDropping) {
+                text1 = "????";
+            }
+            text(text1, temp_x - (text1.length * (15 / 4)), temp_y); // center text with char length
+        }
+    }
+    // Shuffles the array of remaining names for selection (Algorithm src: https://bost.ocks.org/mike/shuffle/)
     this.shuffleNames = function () {
         var m = this.names.length
             , t, i;
@@ -83,15 +83,15 @@ function PlinkoBoard(position, size_width, size_height) {
             this.names[i] = t;
         }
     }
-    this.setWinner = function(disc){
+    this.setWinner = function (disc) {
         foundWinner = true;
         // get index from mapping disc x to array keys
-        winner = Math.floor(map(disc.position.x-this.position.x,0,this.size_width,0,this.names.length));
+        winner = Math.floor(map(disc.position.x - this.position.x, 0, this.size_width, 0, this.names.length));
         removeNameBtn.show();
     }
     // initialize board with firebase data
     this.setNames = function (names) {
-        this.discs[0] = (new Disc(this, createVector(this.position.x, this.position.y + 20), 20));
+        this.discs[0] = (new Disc(this, createVector(this.position.x, this.position.y + 20), 15));
         this.names = names;
         this.names_width = this.size_width / names.length;
         this.shuffleNames();

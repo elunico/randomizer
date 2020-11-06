@@ -3,32 +3,31 @@ let submit;
 let result;
 
 function setup() {
-    noCanvas();
+  noCanvas();
 
-    input = select('#names');
-    submit = select('#submit');
-    result = select('#result');
+  input = select('#names');
+  submit = select('#submit');
+  result = select('#result');
 
-    checkInput();
+  checkInput();
 
-    submit.mousePressed(() => {
-        let data = input.value();
-        names = data.split('\n');
+  submit.mousePressed(() => {
+    let data = input.value();
+    names = data.split('\n');
 
-        // If blank
-        for (let i = names.length - 1; i >= 0; i--) {
-            names[i] = names[i].trim();
-            if (names[i].length === 0) {
-                names.splice(i, 1);
-            }
-        }
+    // If blank
+    for (let i = names.length - 1; i >= 0; i--) {
+      names[i] = names[i].trim();
+      if (names[i].length === 0) {
+        names.splice(i, 1);
+      }
+    }
+    createURL(names);
+  });
 
-        sendToFirebase(names, result);
-    });
-
-    input.input(() => {
-      checkInput(input, submit);
-    });
+  input.input(() => {
+    checkInput(input, submit);
+  });
 }
 
 function checkInput() {
@@ -40,3 +39,4 @@ function checkInput() {
     submit.removeAttribute('disabled');
   }
 }
+

@@ -1,5 +1,5 @@
 // The names
-var names = [];
+var names;
 // Divs to hold names
 var divs;
 
@@ -72,7 +72,8 @@ function setup() {
   angle = random(TWO_PI);
 
 
-  loadFirebase(createNames);
+  console.log('creating names');
+  createNames();
 }
 
 function draw() {
@@ -92,18 +93,18 @@ function draw() {
 
 
   //Ensure that we have atleast a color
-  if(!previousColor){
-    if(nameColors[0]){
+  if (!previousColor) {
+    if (nameColors[0]) {
       previousColor = color(nameColors[0].rgba[0], nameColors[0].rgba[1], nameColors[0].rgba[2]);
       currentColor = previousColor;
     }
   }
 
   // lerp between the current and the previous color and clear background
-  if(previousColor){
-      currentColor = lerpColor(currentColor, previousColor, 0.04);
-      background(currentColor);
-    }
+  if (previousColor) {
+    currentColor = lerpColor(currentColor, previousColor, 0.04);
+    background(currentColor);
+  }
   strokeWeight(8);
   stroke(255);
   fill(190);
@@ -202,6 +203,7 @@ function draw() {
 // Make the divs that show the names
 function createNames() {
   // INitial state
+  console.log(names);
   if (!names) {
     names = [];
     for (var i = 0; i < 16; i++) {
@@ -232,16 +234,14 @@ function createDivs() {
   for (var i = 0; i < names.length; i++) {
     var thePadding;
 
-    if(isImageURL(names[i]))
-    {
+    if (isImageURL(names[i])) {
       // Image
       divs[i] = createDiv('<img src="' + names[i] + '" style="width: 100%;">');
       divs[i].style("width", "100px");
       divs[i].style("height", "100px");
       thePadding = '2px';
     }
-    else
-    {
+    else {
       // Text
       divs[i] = createDiv(names[i]);
       divs[i].style("color", "#FFFFFF");
@@ -336,8 +336,7 @@ function getColorByPercentage(firstColor, secondColor, percentage) {
   return firstColorCopy.add(scaledDeltaColor);
 }
 
-function isImageURL(url)
-{
-  if(url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".gif") || url.endsWith(".jpeg")) return true;
+function isImageURL(url) {
+  if (url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".gif") || url.endsWith(".jpeg")) return true;
   else return false;
 }

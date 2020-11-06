@@ -1,22 +1,23 @@
 // Gravity Constant
-var GRAVITY;
+let GRAVITY;
 // Constant for a multiplier to try and ensure disc doesn't get stuck in obstacle
-var ESC_VELOCITY_MULT = 1.06;
+
+const ESC_VELOCITY_MULT = 1.3;
 // has the ball been dropped?
-var isDiscDropping = false;
+let isDiscDropping = false;
 //The user's input names
-var names = [];
+// let names;
 // the PlinkoBoard object that contains the pegs and discs
-var Board;
+let Board;
 //This will become true when everything is ready
-var loadAllDataFinished = false;
-var foundWinner = false;
+let loadAllDataFinished = false;
+let foundWinner = false;
 //The winner name index
-var winner = null;
+let winner = null;
 //Start button
-var removeNameBtn;
+let removeNameBtn;
 // Hide the names before the ball has been dropped toggle
-var hideNames = true;
+let hideNames = true;
 function setup() {
     GRAVITY = createVector(0, .5); // init gravity
     // Make the canvas full screen size
@@ -24,8 +25,8 @@ function setup() {
     canvas.position(0, 0);
     ellipseMode(CENTER);
     // Make a silly github thing
-    var github = createA('https://github.com/shiffman/randomizer', '');
-    var gitimg = createImg('https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png');
+    let github = createA('https://github.com/shiffman/randomizer', '');
+    let gitimg = createImg('https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png');
     gitimg.id('gitimg');
     github.child('gitimg');
     gitimg.attribute('style', 'position: absolute; top: 0; right: 0; border: 0;');
@@ -38,9 +39,11 @@ function setup() {
 
 
     Board = new PlinkoBoard(createVector(50, 25), windowWidth - 100, windowHeight - 100);
-    loadFirebase(initialize);
     textSize(15);
     textStyle(BOLD);
+
+    // no callback 
+    initialize();
 }
 
 function draw() {
@@ -59,6 +62,7 @@ function draw() {
 }
 
 function initialize() {
+    console.log(names);
     Board.setNames(names);
     //Everything is ready to go!
     loadAllDataFinished = true;
@@ -66,7 +70,7 @@ function initialize() {
 
 function mousePressed() {
     // if disc isn't moving already and mouse is outside board (hitting remove button)
-    if (!isDiscDropping && (mouseY < Board.size_height+Board.position.y)) {
+    if (!isDiscDropping && (mouseY < Board.size_height + Board.position.y)) {
         startSimulation();
     }
 }
