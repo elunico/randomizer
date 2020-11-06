@@ -1,23 +1,34 @@
 var num = Number(prompt("How many people per group? ")) || 3;
 
 
+function titleCaseName(name) {
+  name = name.trim().toLowerCase();
+  let parts = name.split(/\s+/);
+  for (let i = 0; i < parts.length; i++) {
+    parts[i] = parts[i].charAt(0).toUpperCase() + parts[i].substring(1);
+  }
+  return parts.join(' ');
+}
+
 function setup() {
   noCanvas();
-  // no callback 
+
+  let countP = select('.count');
+  countP.html(`Total students: ${count}`);
 
   var params = getURLParams();
-  // var seed = Number(params.seed.substring(0,1))
-  var seed = int(Math.random(params.id) * 100)
+  var seed = int(Math.random(params.id) * 100);
+  var preferOversize = true; 
+
+  for (let i = 0; i < names.length; i++) {
+    names[i] = titleCaseName(names[i]);
+  }
 
   function loaded() {
     if (!names) {
       names = ['oops', 'i', 'didn\'t', 'load', 'any', 'names'];
     }
 
-    for (var i = 0; i < names.length; i++) {
-      //var n = createDiv(names[i]);
-      //n.parent('names');
-    }
     howmany = 0;
     randomSeed(seed);
     console.log(seed);
@@ -25,23 +36,41 @@ function setup() {
     setTimeout(shuffler, timing);
   }
 
-  //names = ['dan','aliki','elias','olympia','one','two'];
-
-
-  //var shuffleButton = select('#shuffle');
+  var shuffleButton = select('#shuffle');
+  var resizeButton = select('#resize');
+  var preferOversizedBox = select('#preferover');
 
   var timing = 5;
   var howmany = 0;
 
 
-  //shuffleButton.mousePressed(function() {
+  shuffleButton.mousePressed(function () {
+    seed = int(Math.random(params.id) * 100);
+    loaded();
+  });
 
-  //});
+  resizeButton.mousePressed(function () {
+    num = Number(prompt("How many people per group? ")) || 3;
+    seed = int(Math.random(params.id) * 100);
+    loaded();
+  });
+
+  var status = select('#preference');
+
+  console.log(preferOversizedBox.class);
+  preferOversizedBox.mousePressed(function() {
+    preferOversize = !preferOversize;
+    status.elt.className = '';
+    status.class(preferOversize ? 'yes' : 'no');
+    status.html(preferOversize ? 'yes' : 'no');
+    loaded();
+  })
+
 
   function shuffler() {
     var total = floor(names.length / num);
 
-    namescopy = names.slice();//copy(names);
+    namescopy = names.slice();
 
     var groups = [];
     for (var i = 0; i < total; i++) {
@@ -55,29 +84,17 @@ function setup() {
     }
 
     if (namescopy.length > 0) {
-      // Hack for one leftover with special case of groups of 7
-      if (namescopy.length === 1) {
-        groups[0].push(namescopy[0]);
+      let resize = namescopy.length / 2 <= groups[0].length;
+      // if the last group is less than half the size of a full group 
+      // we want to distribute them
+      // prefer larger groups than smaller groups
+      if (resize && preferOversize) {
+        let groupIdx = 0; 
+        for (let i = 0; i < namescopy.length; i++) {
+          groups[groupIdx++ % groups.length].push(namescopy[i]);
+        }
       } else {
         groups.push(namescopy);
-      }
-    }
-
-    // check for a group that is smaller than the others and distribute 
-    // to remaining groups 
-    // prefer oversized to undersized groups
-
-    let preferOversized = true;
-
-    if (preferOversized) {
-      let smallest = groups[groups.length - 1]; // groups.reduce((pv, cv, ci, a) => cv.length < pv.length ? cv : pv);
-      let needsChange = groups.filter((v) => v.length > smallest.length).length > 0;
-      let i = 0;
-      if (needsChange) {
-        for (let member of smallest) {
-          groups[i++ % groups.length].push(member);
-        }
-        groups.splice(groups.length - 1, 1);
       }
     }
 
@@ -107,9 +124,6 @@ function buildTable(groups) {
 
   var count = 0;
 
-  //var num = select('#num').value();
-  //console.log(groups.length);
-
   for (var i = 0; i < groups.length; i++) {
 
     var tr = createElement('tr');
@@ -119,8 +133,8 @@ function buildTable(groups) {
     tr.parent(where);
 
     var td = createElement('td');
-    td.html(i);
-    td.class('tablecell');
+    td.html(`Team ${Number(i) + 1}`);
+    td.class('tablecell-name');
     td.parent('row' + i);
 
     for (var j = 0; j < groups[i].length; j++) {

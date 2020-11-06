@@ -1,7 +1,51 @@
-html, body {
+html,
+body {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial;
 }
 
 textarea {
   resize: none;
+}
+
+.tablecell-name {
+  font-weight: bold;
+}
+
+.namestable {
+  font-size: 1.1em;
+}
+
+.count {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.btn,
+.checkbox {
+  border: 1px solid black;
+  border-radius: 2%;
+  padding: 1%;
+  text-transform: uppercase;
+  box-shadow: 2pt gray;
+  transition: all linear 100ms;
+  width: 30%;
+  text-align: center;
+  margin: 1%;
+}
+
+.btn:hover,
+.checkbox:hover {
+  border: 2px solid black;
+  border-radius: 4%;
+  box-shadow: 4pt gray;
+  transform: scale(1.1);
+}
+
+.yes {
+  color: green;
+}
+
+.no {
+  color: red;
+  font-weight: bold;
 }
